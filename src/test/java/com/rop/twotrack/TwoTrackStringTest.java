@@ -26,8 +26,8 @@ public class TwoTrackStringTest {
 
     Result<String, String> result = allTT.applyTo(request, e -> "Really unexpected error");
 
-    Assert.assertNull(result.failure());
-    Assert.assertEquals(result.success(), "OK");
+    Assert.assertNull(result.fail());
+    Assert.assertEquals(result.ok(), "OK");
   }
 
   @Test
@@ -45,8 +45,8 @@ public class TwoTrackStringTest {
 
     Result<String, String> result = allTT.applyTo(request, e -> "Really unexpected error");
 
-    Assert.assertNull(result.success());
-    Assert.assertEquals(result.failure(), "id should be positive");
+    Assert.assertNull(result.ok());
+    Assert.assertEquals(result.fail(), "id should be positive");
   }
 
   @Test
@@ -64,8 +64,8 @@ public class TwoTrackStringTest {
 
     Result<String, String> result = allTT.applyTo(request, e -> "Really unexpected error");
 
-    Assert.assertNull(result.success());
-    Assert.assertEquals(result.failure(), "name can not be blank");
+    Assert.assertNull(result.ok());
+    Assert.assertEquals(result.fail(), "name can not be blank");
   }
 
   @Test
@@ -84,8 +84,8 @@ public class TwoTrackStringTest {
 
     Result<String, String> result = allTT.applyTo(request, e -> "Really unexpected error");
 
-    Assert.assertNull(result.success());
-    Assert.assertEquals(result.failure(), "Error enviando el mail: email bad");
+    Assert.assertNull(result.ok());
+    Assert.assertEquals(result.fail(), "Error enviando el mail: email bad");
   }
 
   @Test
@@ -104,8 +104,8 @@ public class TwoTrackStringTest {
 
     Result<String, String> result = allTT.applyTo(request, e -> "Really unexpected error: " + e.getMessage());
 
-    Assert.assertNull(result.success());
-    Assert.assertEquals(result.failure(), "Really unexpected error: Not expected at all");
+    Assert.assertNull(result.ok());
+    Assert.assertEquals(result.fail(), "Really unexpected error: Not expected at all");
   }
 
   @Test
@@ -126,8 +126,8 @@ public class TwoTrackStringTest {
       return "Really unexpected error";
     });
 
-    Assert.assertNull(result.success());
-    Assert.assertEquals(result.failure(), "name can not be blank, email can not be blank");
+    Assert.assertNull(result.ok());
+    Assert.assertEquals(result.fail(), "name can not be blank, email can not be blank");
   }
 
   @Test
@@ -145,33 +145,33 @@ public class TwoTrackStringTest {
 
     Result<String, String> result = allTT.applyTo(request, e -> "Really unexpected error");
 
-    Assert.assertNull(result.failure());
-    Assert.assertEquals(result.success(), "OK");
+    Assert.assertNull(result.fail());
+    Assert.assertEquals(result.ok(), "OK");
   }
 
   private static Result<User, String> validateRequest(User request) {
     if (request.getId() < 0) {
-      return Result.failure("id should be positive");
+      return Result.fail("id should be positive");
     }
     if (request.getName() == null || request.getName().trim().length() == 0) {
-      return Result.failure("name can not be blank");
+      return Result.fail("name can not be blank");
     }
     if (request.getEmail() == null || request.getEmail().trim().length() == 0) {
-      return Result.failure("email can not be blank");
+      return Result.fail("email can not be blank");
     }
     if (request.getId() == 3) {
       throw new RuntimeException("Not expected at all");
     }
-    return Result.success(request);
+    return Result.ok(request);
   }
 
   private static TwoTrack<User, User, String> composedValidateRequest() {
-    Function<User, Result<User, String>> validateId = (r -> r.getId() < 0 ? Result.failure("id should be positive")
-        : Result.success(r));
+    Function<User, Result<User, String>> validateId = (r -> r.getId() < 0 ? Result.fail("id should be positive")
+        : Result.ok(r));
     Function<User, Result<User, String>> validateName = (r -> r.getName() == null || r.getName().trim().length() == 0
-        ? Result.failure("name can not be blank") : Result.success(r));
+        ? Result.fail("name can not be blank") : Result.ok(r));
     Function<User, Result<User, String>> validateEmail = (r -> r.getEmail() == null || r.getEmail().trim().length() == 0
-        ? Result.failure("email can not be blank") : Result.success(r));
+        ? Result.fail("email can not be blank") : Result.ok(r));
 
     TwoTrack<User, User, String> validateIdTT = TwoTracks.fromSwitch(validateId);
     TwoTrack<User, User, String> validateNameTT = TwoTracks.fromSwitch(validateName);

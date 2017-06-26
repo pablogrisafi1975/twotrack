@@ -1,42 +1,42 @@
 package com.rop.data;
 
-public class Result<S, F> {
+public class Result<O, F> {
 
-  private final S success;
-  private final F failure;
+  private final O ok;
+  private final F fail;
 
-  public S success() {
-    return success;
+  public O ok() {
+    return ok;
   }
 
-  public F failure() {
-    return failure;
+  public F fail() {
+    return fail;
   }
 
-  private Result(S success, F failure) {
-    this.success = success;
-    this.failure = failure;
+  private Result(O ok, F fail) {
+    this.ok = ok;
+    this.fail = fail;
   }
 
-  public static <SS, FF> Success<SS, FF> success(SS success) {
-    return new Success<>(success);
+  public static <OO, FF> Ok<OO, FF> ok(OO ok) {
+    return new Ok<>(ok);
   }
 
-  public static <SS, FF> Failure<SS, FF> failure(FF failure) {
-    return new Failure<>(failure);
+  public static <OO, FF> Fail<OO, FF> fail(FF fail) {
+    return new Fail<>(fail);
   }
 
-  public static class Success<S, F> extends Result<S, F> {
+  public static class Ok<O, F> extends Result<O, F> {
 
-    private Success(S sucess) {
-      super(sucess, null);
+    private Ok(O ok) {
+      super(ok, null);
     }
 
   }
 
-  public static class Failure<S, F> extends Result<S, F> {
-    private Failure(F failure) {
-      super(null, failure);
+  public static class Fail<O, F> extends Result<O, F> {
+    private Fail(F fail) {
+      super(null, fail);
     }
   }
 
